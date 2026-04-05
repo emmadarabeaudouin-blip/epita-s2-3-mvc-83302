@@ -2,43 +2,49 @@
     ViewData["Title"] = "Admin Dashboard";
 }
 
-<h2 class="mb-4">Admin Dashboard</h2>
+<h1>Admin Dashboard</h1>
 
-<div class="row g-3 mb-4">
-    <div class="col-md-3">
-        <div class="card text-center border-0 shadow-sm">
-            <div class="card-body">
-                <div class="fs-1 fw-bold text-primary">@ViewBag.BranchCount</div>
-                <div class="text-muted">Branches</div>
-                <a href="/Admin/Branches" class="btn btn-sm btn-outline-primary mt-2">Manage</a>
-            </div>
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<div class="row mt-4">
+    <div class="col-md-3 mb-3">
+        <div class="card p-3">
+            <h5>Branches</h5>
+            <p>@ViewBag.BranchCount</p>
+            <a asp-action="Branches" class="btn btn-primary btn-sm">Manage Branches</a>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="card text-center border-0 shadow-sm">
-            <div class="card-body">
-                <div class="fs-1 fw-bold text-success">@ViewBag.CourseCount</div>
-                <div class="text-muted">Courses</div>
-                <a href="/Admin/Courses" class="btn btn-sm btn-outline-success mt-2">Manage</a>
-            </div>
+    <div class="col-md-3 mb-3">
+        <div class="card p-3">
+            <h5>Courses</h5>
+            <p>@ViewBag.CourseCount</p>
+            <a asp-action="Courses" class="btn btn-primary btn-sm">Manage Courses</a>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="card text-center border-0 shadow-sm">
-            <div class="card-body">
-                <div class="fs-1 fw-bold text-warning">@ViewBag.StudentCount</div>
-                <div class="text-muted">Students</div>
-                <a href="/Admin/Students" class="btn btn-sm btn-outline-warning mt-2">View</a>
-            </div>
+    <div class="col-md-3 mb-3">
+        <div class="card p-3">
+            <h5>Students</h5>
+            <p>@ViewBag.StudentCount</p>
+            <a asp-action="Students" class="btn btn-primary btn-sm">Manage Students</a>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="card text-center border-0 shadow-sm">
-            <div class="card-body">
-                <div class="fs-1 fw-bold text-info">@ViewBag.FacultyCount</div>
-                <div class="text-muted">Faculty</div>
-                <a href="/Admin/Enrolments" class="btn btn-sm btn-outline-info mt-2">Enrolments</a>
-            </div>
+    <div class="col-md-3 mb-3">
+        <div class="card p-3">
+            <h5>Faculty</h5>
+            <p>@ViewBag.FacultyCount</p>
+            <a asp-action="Faculty" class="btn btn-primary btn-sm">Manage Faculty</a>
         </div>
     </div>
+</div>
+
+<div class="mt-4">
+    <a asp-action="Enrolments" class="btn btn-outline-primary">Manage Enrolments</a>
+    <a asp-action="FacultyAssignments" class="btn btn-outline-secondary">Manage Faculty Assignments</a>
 </div>

@@ -1,0 +1,35 @@
+﻿@model VgcCollege.Domain.Entities.FacultyCourseAssignment
+
+@{
+    ViewData["Title"] = "Assign Faculty";
+}
+
+<h1>Assign Faculty to Course</h1>
+
+<form asp-action="CreateFacultyAssignment" method="post">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="FacultyProfileId" class="form-label">Faculty</label>
+        <select asp-for="FacultyProfileId" asp-items="ViewBag.Faculty" class="form-select">
+            <option value="0">-- Select Faculty --</option>
+        </select>
+        <span asp-validation-for="FacultyProfileId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="CourseId" class="form-label">Course</label>
+        <select asp-for="CourseId" asp-items="ViewBag.Courses" class="form-select">
+            <option value="0">-- Select Course --</option>
+        </select>
+        <span asp-validation-for="CourseId" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Assign</button>
+    <a asp-action="FacultyAssignments" class="btn btn-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

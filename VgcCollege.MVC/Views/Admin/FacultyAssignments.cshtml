@@ -1,0 +1,46 @@
+﻿@model IEnumerable<VgcCollege.Domain.Entities.FacultyCourseAssignment>
+
+@{
+    ViewData["Title"] = "Faculty Assignments";
+}
+
+<h1>Faculty Assignments</h1>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+<p>
+    <a asp-action="CreateFacultyAssignment" class="btn btn-primary">Assign Faculty to Course</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Faculty</th>
+            <th>Course</th>
+            <th>Branch</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var assignment in Model)
+        {
+            <tr>
+                <td>@assignment.FacultyProfile?.Name</td>
+                <td>@assignment.Course?.Name</td>
+                <td>@assignment.Course?.Branch?.Name</td>
+                <td>
+                    <form asp-action="DeleteFacultyAssignment" asp-route-id="@assignment.Id" method="post" style="display:inline;">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-danger btn-sm"
+                                onclick="return confirm('Remove this faculty assignment?');">
+                            Delete
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
