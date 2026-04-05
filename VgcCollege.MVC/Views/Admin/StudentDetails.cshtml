@@ -1,0 +1,118 @@
+﻿@model VgcCollege.Domain.Entities.StudentProfile
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>@Model.Name</h2>
+    <a asp-action="Students" class="btn btn-outline-dark">Back</a>
+</div>
+
+<div class="card mb-4 shadow-sm">
+    <div class="card-header"><strong>Personal information</strong></div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>Email :</strong> @Model.Email</p>
+                <p><strong>Phone :</strong> @Model.Phone</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>Address :</strong> @Model.Address</p>
+                <p><strong>Student number :</strong> @Model.StudentNumber</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-4 shadow-sm">
+    <div class="card-header"><strong>Enrolled classes</strong></div>
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+            <thead class="table-light">
+                <tr><th>Cours</th><th>Branch</th><th>Statut</th><th>Attendance</th><th></th></tr>
+            </thead>
+            <tbody>
+                @foreach (var e in Model.Enrolments)
+                {
+                    var pct = e.AttendanceRecords.Any()
+                        ? Math.Round((double)e.AttendanceRecords.Count(a => a.Present)
+                          / e.AttendanceRecords.Count * 100)
+                        : 0;
+                    <tr>
+                        <td>@e.Course.Name</td>
+                        <td>@e.Course.Branch.Name</td>
+                        <td><span class="badge @(e.Status == "Active" ? "bg-success" : "bg-secondary")">@e.Status</span></td>
+                        <td>
+                            <div class="progress" style="height:8px;width:80px">
+                                <div class="progress-bar" style="width:@pct%"></div>
+                            </div>
+                            <small class="text-muted">@pct%</small>
+                        </td>
+                        <td>
+                            <a asp-action="EnrolmentDetails" asp-route-id="@e.Id"
+                               class="btn btn-sm btn-outline-secondary">Details</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card mb-4 shadow-sm">
+    <div class="card-header"><strong>Assignment results</strong></div>
+    <div class="card-body p-0">
+        <table class="table table-sm mb-0">
+            <thead class="table-light">
+                <tr><th>Assignment</th><th>Score</th><th>Max</th><th>Feedback</th></tr>
+            </thead>
+            <tbody>
+                @foreach (var ar in Model.AssignmentResults)
+                {
+                    <tr>
+                        <td>@ar.Assignment.Title</td>
+                        <td>@ar.Score</td>
+                        <td>@ar.Assignment.MaxScore</td>
+                        <td>@ar.Feedback</td>
+                    </tr>
+                }
+                @if (!Model.AssignmentResults.Any())
+                {
+                    <tr><td colspan="4" class="text-muted text-center">No results</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<div class="card shadow-sm">
+    <div class="card-header"><strong>Exam results</strong></div>
+    <div class="card-body p-0">
+        <table class="table table-sm mb-0">
+            <thead class="table-light">
+                <tr><th>Exam</th><th>Score</th><th>Max</th><th>Grade</th><th>Published</th></tr>
+            </thead>
+            <tbody>
+                @foreach (var er in Model.ExamResults)
+                {
+                    <tr>
+                        <td>@er.Exam.Title</td>
+                        <td>@er.Score</td>
+                        <td>@er.Exam.MaxScore</td>
+                        <td><span class="badge bg-primary">@er.Grade</span></td>
+                        <td>
+                            <span class="badge @(er.Exam.ResultsReleased ? "bg-success" : "bg-warning text-dark")">
+                                @(er.Exam.ResultsReleased ? "Yes" : "Provisional")
+                            </span>
+                        </td>
+                    </tr>
+                }
+                @if (!Model.ExamResults.Any())
+                {
+                    <tr><td colspan="5" class="text-muted text-center">No results</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

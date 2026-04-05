@@ -1,0 +1,44 @@
+﻿@model VgcCollege.Domain.Entities.Course
+@{
+    ViewData["Title"] = "Create course";
+}
+
+<h2 class="mb-4">New course</h2>
+
+<div class="card shadow-sm" style="max-width:500px">
+    <div class="card-body">
+        <form asp-action="CreateCourse" method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label">Name of the course</label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger small"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="BranchId" class="form-label">Branch</label>
+                <select asp-for="BranchId" class="form-select">
+                    <option value="">— Choose —</option>
+                    @foreach (var b in ViewBag.Branches as List<VgcCollege.Domain.Entities.Branch>)
+                    {
+                        <option value="@b.Id">@b.Name</option>
+                    }
+                </select>
+                <span asp-validation-for="BranchId" class="text-danger small"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="StartDate" class="form-label">Start date</label>
+                <input asp-for="StartDate" type="date" class="form-control" />
+            </div>
+            <div class="mb-3">
+                <label asp-for="EndDate" class="form-label">End date</label>
+                <input asp-for="EndDate" type="date" class="form-control" />
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">Create</button>
+                <a asp-action="Courses" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,27 @@
+﻿@model List<VgcCollege.Domain.Entities.StudentProfile>
+@{
+    ViewData["Title"] = "Students";
+}
+
+<h2 class="mb-3">Students</h2>
+
+<table class="table table-hover shadow-sm">
+    <thead class="table-dark">
+        <tr><th>Name</th><th>Email</th><th>Phone</th><th>Enrolled classes</th><th></th></tr>
+    </thead>
+    <tbody>
+        @foreach (var s in Model)
+        {
+            <tr>
+                <td>@s.Name</td>
+                <td>@s.Email</td>
+                <td>@s.Phone</td>
+                <td><span class="badge bg-info text-dark">@s.Enrolments.Count</span></td>
+                <td>
+                    <a asp-action="StudentDetails" asp-route-id="@s.Id"
+                       class="btn btn-sm btn-outline-primary">View profile</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

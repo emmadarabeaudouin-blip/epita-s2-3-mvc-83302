@@ -1,0 +1,82 @@
+﻿@model VgcCollege.Domain.Entities.Branch
+@{
+    ViewData["Title"] = "Details — " + Model.Name;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h2>@Model.Name</h2>
+        <p class="text-muted">@Model.Address</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a asp-action="EditBranch" asp-route-id="@Model.Id" class="btn btn-outline-secondary">Edit</a>
+        <a asp-action="Branches" class="btn btn-outline-dark">Back</a>
+    </div>
+</div>
+
+<h4 class="mt-4">
+    Course in this branch
+    <span class="badge bg-primary ms-2">@Model.Courses.Count</span>
+</h4>
+
+@foreach (var course in Model.Courses)
+{
+    <div class="card mb-3 shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <div>
+                <strong>@course.Name</strong>
+                <span class="text-muted small ms-2">
+                    @course.StartDate.ToString("dd/MM/yyyy") →
+                    @course.EndDate.ToString("dd/MM/yyyy")
+                </span>
+            </div>
+            <a asp-action="CourseDetails" asp-route-id="@course.Id"
+               class="btn btn-sm btn-outline-primary">View course</a>
+        </div>
+        <div class="card-body">
+            @if (course.FacultyAssignments.Any())
+            {
+                <p class="mb-2">
+                    <strong>Faculty :</strong>
+                    @string.Join(", ", course.FacultyAssignments.Select(fa => fa.FacultyProfile.Name))
+                </p>
+            }
+
+            <table class="table table-sm table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Student</th>
+                        <th>Email</th>
+                        <th>Status</th>
+                        <th>Enrolled the</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var enrolment in course.Enrolments)
+                    {
+                        <tr>
+                            <td>@enrolment.StudentProfile.Name</td>
+                            <td>@enrolment.StudentProfile.Email</td>
+                            <td>
+                                <span class="badge @(enrolment.Status == "Active" ? "bg-success" : "bg-secondary")">
+                                    @enrolment.Status
+                                </span>
+                            </td>
+                            <td>@enrolment.EnrolDate.ToString("dd/MM/yyyy")</td>
+                            <td>
+                                <a asp-action="StudentDetails"
+                                   asp-route-id="@enrolment.StudentProfile.Id"
+                                   class="btn btn-sm btn-outline-info">Profile</a>
+                            </td>
+                        </tr>
+                    }
+                    @if (!course.Enrolments.Any())
+                    {
+                        <tr><td colspan="5" class="text-muted text-center">No student enrolled</td></tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

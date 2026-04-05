@@ -1,0 +1,55 @@
+﻿@model List<VgcCollege.Domain.Entities.Course>
+@{ ViewData["Title"] = "Course"; }
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Course</h2>
+    <a asp-action="CreateCourse" class="btn btn-primary">+ New course</a>
+</div>
+
+<table class="table table-hover shadow-sm">
+    <thead class="table-dark">
+        <tr>
+            <th>Name</th>
+            <th>Branch</th>
+            <th>Faculty</th>
+            <th>Students</th>
+            <th>Dates</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var course in Model)
+    {
+        <tr>
+            <td><strong>@course.Name</strong></td>
+            <td>@course.Branch.Name</td>
+                <td>
+                    @if (course.FacultyAssignments.Any())
+                    {
+                        @string.Join(", ", course.FacultyAssignments.Select(fa => fa.FacultyProfile.Name))
+                    }
+                    else
+                    {
+                        <span class="text-muted">—</span>
+                    }
+                </td>
+            <td><span class="badge bg-info text-dark">@course.Enrolments.Count</span></td>
+            <td class="small text-muted">
+                @course.StartDate.ToString("MM/yyyy") → @course.EndDate.ToString("MM/yyyy")
+            </td>
+            <td class="d-flex gap-1">
+                <a asp-action="CourseDetails" asp-route-id="@course.Id"
+                   class="btn btn-sm btn-outline-primary">Details</a>
+                <a asp-action="EditCourse" asp-route-id="@course.Id"
+                   class="btn btn-sm btn-outline-secondary">Edit</a>
+                <form asp-action="DeleteCourse" method="post"
+                      onsubmit="return confirm('Delete this course ?')">
+                    <input type="hidden" name="id" value="@course.Id" />
+                    @Html.AntiForgeryToken()
+                    <button class="btn btn-sm btn-outline-danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

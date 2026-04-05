@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="VgcCollege.Domain/VgcCollege.Domain.csproj" Id="e0a5b269-3ab4-4233-b7aa-0abee5e0a5eb" />
+  <Project Path="VgcCollege.MVC/VgcCollege.MVC.csproj" />
+  <Project Path="VgcCollege.Tests/VgcCollege.Tests.csproj" Id="c9889331-2aa1-4e1c-90e2-00b97a936148" />
+</Solution>

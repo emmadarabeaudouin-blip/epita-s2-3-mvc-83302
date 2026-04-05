@@ -1,0 +1,34 @@
+﻿@model List<VgcCollege.Domain.Entities.Branch>
+@{ ViewData["Title"] = "Branches"; }
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Branches</h2>
+    <a asp-action="CreateBranch" class="btn btn-primary">+ New branch</a>
+</div>
+
+<div class="row g-3">
+@foreach (var branch in Model)
+{
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">@branch.Name</h5>
+                <p class="text-muted small">@branch.Address</p>
+                <span class="badge bg-secondary">@branch.Courses.Count course</span>
+            </div>
+            <div class="card-footer d-flex gap-2">
+                <a asp-action="BranchDetails" asp-route-id="@branch.Id"
+                   class="btn btn-sm btn-outline-primary">Details</a>
+                <a asp-action="EditBranch" asp-route-id="@branch.Id"
+                   class="btn btn-sm btn-outline-secondary">Edit</a>
+                <form asp-action="DeleteBranch" method="post" class="d-inline"
+                      onsubmit="return confirm('Delete this branch ?')">
+                    <input type="hidden" name="id" value="@branch.Id" />
+                    @Html.AntiForgeryToken()
+                    <button class="btn btn-sm btn-outline-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+</div>
