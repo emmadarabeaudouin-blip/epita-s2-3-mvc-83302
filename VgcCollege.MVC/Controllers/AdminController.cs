@@ -17,9 +17,7 @@ namespace VgcCollege.MVC.Controllers
             _db = db;
         }
 
-        // ─────────────────────────────────────────────────────────────
         // DASHBOARD
-        // ─────────────────────────────────────────────────────────────
         public IActionResult Index()
         {
             ViewBag.BranchCount = _db.Branches.Count();
@@ -31,9 +29,7 @@ namespace VgcCollege.MVC.Controllers
             return View();
         }
 
-        // ─────────────────────────────────────────────────────────────
         // BRANCHES
-        // ─────────────────────────────────────────────────────────────
         public IActionResult Branches()
         {
             var branches = _db.Branches.ToList();
@@ -102,9 +98,7 @@ namespace VgcCollege.MVC.Controllers
             return RedirectToAction(nameof(Branches));
         }
 
-        // ─────────────────────────────────────────────────────────────
         // COURSES
-        // ─────────────────────────────────────────────────────────────
         public IActionResult Courses()
         {
             var courses = _db.Courses
@@ -190,9 +184,7 @@ namespace VgcCollege.MVC.Controllers
             return RedirectToAction(nameof(Courses));
         }
 
-        // ─────────────────────────────────────────────────────────────
         // STUDENTS
-        // ─────────────────────────────────────────────────────────────
         public IActionResult Students()
         {
             var students = _db.StudentProfiles
@@ -304,9 +296,7 @@ namespace VgcCollege.MVC.Controllers
             return RedirectToAction(nameof(Students));
         }
 
-        // ─────────────────────────────────────────────────────────────
         // FACULTY
-        // ─────────────────────────────────────────────────────────────
         public IActionResult Faculty()
         {
             var faculty = _db.FacultyProfiles
@@ -412,9 +402,7 @@ namespace VgcCollege.MVC.Controllers
             return RedirectToAction(nameof(Faculty));
         }
 
-        // ─────────────────────────────────────────────────────────────
         // ENROLMENTS
-        // ─────────────────────────────────────────────────────────────
         public IActionResult Enrolments()
         {
             var enrolments = _db.CourseEnrolments
@@ -477,9 +465,8 @@ namespace VgcCollege.MVC.Controllers
             return RedirectToAction(nameof(Enrolments));
         }
 
-        // ─────────────────────────────────────────────────────────────
         // FACULTY ASSIGNMENTS
-        // ─────────────────────────────────────────────────────────────
+       
         public IActionResult FacultyAssignments()
         {
             var assignments = _db.FacultyCourseAssignments

@@ -1,0 +1,54 @@
+﻿@model VgcCollege.MVC.Models.LoginViewModel
+@{
+    ViewData["Title"] = "Login"; Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login — VGC College</title>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+</head>
+<body class="bg-light d-flex align-items-center" style="min-height:100vh">
+    <div class="container" style="max-width:420px">
+        <div class="card shadow-sm border-0 mt-5">
+            <div class="card-body p-4">
+                <h4 class="text-center mb-1">VGC College</h4>
+                <p class="text-center text-muted small mb-4">Student & Course Management System</p>
+
+                <form asp-action="Login" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
+
+                    <div asp-validation-summary="All" class="alert alert-danger small py-2"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label">Email address</label>
+                        <input asp-for="Email" class="form-control" placeholder="you@vgc.ie" />
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Password" class="form-label">Password</label>
+                        <input asp-for="Password" type="password" class="form-control" />
+                        <span asp-validation-for="Password" class="text-danger small"></span>
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input asp-for="RememberMe" class="form-check-input" />
+                        <label asp-for="RememberMe" class="form-check-label">Remember me</label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">Sign in</button>
+                </form>
+
+                <hr class="my-3" />
+                <p class="text-muted small text-center mb-0">
+                    Demo accounts — see README.md for credentials
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

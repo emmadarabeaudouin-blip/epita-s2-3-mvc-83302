@@ -1,0 +1,75 @@
+﻿@{
+    ViewData["Title"] = "My Results";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>My Results</h2>
+    <a asp-action="Dashboard" class="btn btn-outline-dark">Back</a>
+</div>
+
+@if ((int)ViewBag.PendingExams > 0)
+{
+    <div class="alert alert-info">
+        <strong>@ViewBag.PendingExams exam result(s)</strong> are not yet released by your faculty.
+    </div>
+}
+
+<h4 class="mb-3">Assignment Results</h4>
+<div class="card mb-4 shadow-sm">
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+            <thead class="table-light">
+                <tr><th>Assignment</th><th>Course</th><th>Score</th><th>Max</th><th>%</th><th>Feedback</th></tr>
+            </thead>
+            <tbody>
+                @foreach (var ar in ViewBag.AssignmentResults as
+                                List<VgcCollege.Domain.Entities.AssignmentResult>)
+                {
+                    var pct = Math.Round(ar.Score / ar.Assignment.MaxScore * 100);
+                    <tr>
+                        <td>@ar.Assignment.Title</td>
+                        <td>@ar.Assignment.Course?.Name</td>
+                        <td>@ar.Score</td>
+                        <td>@ar.Assignment.MaxScore</td>
+                        <td>
+                            <span class="badge @(pct >= 50 ? "bg-success" : "bg-danger")">@pct%</span>
+                        </td>
+                        <td class="text-muted small">@ar.Feedback</td>
+                    </tr>
+                }
+                @if (!(ViewBag.AssignmentResults as List<VgcCollege.Domain.Entities.AssignmentResult>)!.Any())
+                {
+                    <tr><td colspan="6" class="text-center text-muted py-3">No assignment results yet.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<h4 class="mb-3">Exam Results</h4>
+<div class="card shadow-sm">
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+            <thead class="table-light">
+                <tr><th>Exam</th><th>Course</th><th>Score</th><th>Max</th><th>Grade</th></tr>
+            </thead>
+            <tbody>
+                @foreach (var er in ViewBag.ExamResults as
+                                List<VgcCollege.Domain.Entities.ExamResult>)
+                {
+                    <tr>
+                        <td>@er.Exam.Title</td>
+                        <td>@er.Exam.Course?.Name</td>
+                        <td>@er.Score</td>
+                        <td>@er.Exam.MaxScore</td>
+                        <td><span class="badge bg-primary">@er.Grade</span></td>
+                    </tr>
+                }
+                @if (!(ViewBag.ExamResults as List<VgcCollege.Domain.Entities.ExamResult>)!.Any())
+                {
+                    <tr><td colspan="5" class="text-center text-muted py-3">No released results yet.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

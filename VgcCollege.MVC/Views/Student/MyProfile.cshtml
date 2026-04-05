@@ -1,0 +1,41 @@
+﻿@model VgcCollege.Domain.Entities.StudentProfile
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>My Profile</h2>
+    <a asp-action="Dashboard" class="btn btn-outline-dark">Back</a>
+</div>
+
+<div class="card shadow-sm" style="max-width:600px">
+    <div class="card-header"><strong>Personal Information</strong></div>
+    <div class="card-body">
+        <table class="table table-borderless mb-0">
+            <tr>
+                <td class="text-muted fw-semibold" style="width:160px">Full Name</td>
+                <td>@Model.Name</td>
+            </tr>
+            <tr>
+                <td class="text-muted fw-semibold">Email</td>
+                <td>@Model.Email</td>
+            </tr>
+            <tr>
+                <td class="text-muted fw-semibold">Phone</td>
+                <td>@Model.Phone</td>
+            </tr>
+            <tr>
+                <td class="text-muted fw-semibold">Address</td>
+                <td>@Model.Address</td>
+            </tr>
+            <tr>
+                <td class="text-muted fw-semibold">Date of Birth</td>
+                <td>@Model.DateOfBirth.ToString("dd/MM/yyyy")</td>
+            </tr>
+            <tr>
+                <td class="text-muted fw-semibold">Student Number</td>
+                <td>@Model.StudentNumber</td>
+            </tr>
+        </table>
+    </div>
+</div>

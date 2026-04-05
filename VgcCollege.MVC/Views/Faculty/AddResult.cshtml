@@ -1,0 +1,49 @@
+﻿@model VgcCollege.Domain.Entities.AssignmentResult
+@{
+    ViewData["Title"] = "Add Result";
+}
+
+<h2 class="mb-4">Add Assignment Result</h2>
+
+<div class="card shadow-sm" style="max-width:500px">
+    <div class="card-body">
+        <form asp-action="AddResult" asp-route-courseId="@ViewBag.CourseId" method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="mb-3">
+                <label class="form-label">Student</label>
+                <select asp-for="StudentProfileId" class="form-select">
+                    <option value="">— Select student —</option>
+                    @foreach (var s in ViewBag.Students as List<VgcCollege.Domain.Entities.StudentProfile>)
+                    {
+                        <option value="@s.Id">@s.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Assignment</label>
+                <select asp-for="AssignmentId" class="form-select">
+                    <option value="">— Select assignment —</option>
+                    @foreach (var a in ViewBag.Assignments as List<VgcCollege.Domain.Entities.Assignment>)
+                    {
+                        <option value="@a.Id">@a.Title (max @a.MaxScore)</option>
+                    }
+                </select>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Score" class="form-label">Score</label>
+                <input asp-for="Score" type="number" step="0.5" class="form-control" />
+            </div>
+            <div class="mb-3">
+                <label asp-for="Feedback" class="form-label">Feedback</label>
+                <textarea asp-for="Feedback" class="form-control" rows="3"></textarea>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-success">Save Result</button>
+                <a asp-action="Gradebook" asp-route-courseId="@ViewBag.CourseId"
+                   class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>

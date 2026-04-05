@@ -1,0 +1,68 @@
+﻿@model List<VgcCollege.Domain.Entities.Course>
+@{
+    ViewData["Title"] = "Faculty Dashboard";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2>Welcome, @((ViewBag.Profile as VgcCollege.Domain.Entities.FacultyProfile)?.Name)</h2>
+        <p class="text-muted mb-0">Faculty Dashboard</p>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card text-center border-0 shadow-sm">
+            <div class="card-body">
+                <div class="fs-1 fw-bold text-primary">@ViewBag.CourseCount</div>
+                <div class="text-muted">My Courses</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center border-0 shadow-sm">
+            <div class="card-body">
+                <div class="fs-1 fw-bold text-success">@ViewBag.StudentCount</div>
+                <div class="text-muted">My Students</div>
+                <a asp-action="MyStudents" class="btn btn-sm btn-outline-success mt-2">View All</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center border-0 shadow-sm">
+            <div class="card-body">
+                <div class="fs-1 fw-bold text-warning">GB</div>
+                <div class="text-muted">Gradebook</div>
+                <a asp-action="Gradebook" class="btn btn-sm btn-outline-warning mt-2">Open</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h4 class="mb-3">My Courses</h4>
+<div class="row g-3">
+    @foreach (var course in Model)
+    {
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title">@course.Name</h5>
+                    <p class="text-muted small mb-1">@course.Branch?.Name</p>
+                    <p class="text-muted small">
+                        @course.StartDate.ToString("dd/MM/yyyy") →
+                        @course.EndDate.ToString("dd/MM/yyyy")
+                    </p>
+                    <span class="badge bg-info text-dark">
+                        @course.Enrolments.Count students
+                    </span>
+                </div>
+                <div class="card-footer d-flex gap-2">
+                    <a asp-action="Gradebook" asp-route-courseId="@course.Id"
+                       class="btn btn-sm btn-outline-primary">Gradebook</a>
+                    <a asp-action="ExamResults" asp-route-courseId="@course.Id"
+                       class="btn btn-sm btn-outline-secondary">Exam Results</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

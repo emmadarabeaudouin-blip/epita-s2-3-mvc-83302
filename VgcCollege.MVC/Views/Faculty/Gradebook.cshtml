@@ -1,0 +1,70 @@
+﻿@model List<VgcCollege.Domain.Entities.AssignmentResult>
+@{ ViewData["Title"] = "Gradebook"; }
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Gradebook</h2>
+    <a asp-action="Dashboard" class="btn btn-outline-dark">Back</a>
+</div>
+
+<form method="get" class="d-flex gap-2 mb-4">
+    <select name="courseId" class="form-select" style="max-width:300px"
+            onchange="this.form.submit()">
+        <option value="">— Select a course —</option>
+        @foreach (var c in ViewBag.Courses as List<VgcCollege.Domain.Entities.Course>)
+        {
+            if (c.Id == ViewBag.CourseId)
+            {
+                <option value="@c.Id" selected>@c.Name</option>
+            }
+            else
+            {
+                <option value="@c.Id">@c.Name</option>
+            }
+        }
+    </select>
+    @if (ViewBag.CourseId != null)
+    {
+        <a asp-action="AddResult" asp-route-courseId="@ViewBag.CourseId"
+           class="btn btn-success">+ Add Result</a>
+    }
+</form>
+
+@if (ViewBag.CourseId != null)
+{
+    <table class="table table-hover shadow-sm">
+        <thead class="table-dark">
+            <tr>
+                <th>Student</th>
+                <th>Assignment</th>
+                <th>Score</th>
+                <th>Max</th>
+                <th>%</th>
+                <th>Feedback</th>
+                <th>Submitted</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var r in Model)
+        {
+            var pct = Math.Round(r.Score / r.Assignment.MaxScore * 100);
+            <tr>
+                <td>@r.StudentProfile.Name</td>
+                <td>@r.Assignment.Title</td>
+                <td>@r.Score</td>
+                <td>@r.Assignment.MaxScore</td>
+                <td>
+                    <span class="badge @(pct >= 50 ? "bg-success" : "bg-danger")">
+                        @pct%
+                    </span>
+                </td>
+                <td>@r.Feedback</td>
+                <td class="text-muted small">@r.SubmittedAt.ToString("dd/MM/yyyy")</td>
+            </tr>
+        }
+        @if (!Model.Any())
+        {
+            <tr><td colspan="7" class="text-center text-muted py-3">No results for this course yet.</td></tr>
+        }
+        </tbody>
+    </table>
+}

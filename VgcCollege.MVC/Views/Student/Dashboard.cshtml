@@ -1,0 +1,72 @@
+﻿@model List<VgcCollege.Domain.Entities.CourseEnrolment>
+@{
+    ViewData["Title"] = "My Dashboard";
+}
+
+<div class="mb-4">
+    <h2>Welcome, @((ViewBag.Profile as VgcCollege.Domain.Entities.StudentProfile)?.Name)</h2>
+    <p class="text-muted">Student Portal</p>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card text-center border-0 shadow-sm">
+            <div class="card-body">
+                <div class="fs-1 fw-bold text-primary">@Model.Count</div>
+                <div class="text-muted">Enrolled Courses</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center border-0 shadow-sm">
+            <div class="card-body">
+                <div class="fs-1 fw-bold text-success">
+                    @Model.SelectMany(e => e.AttendanceRecords).Count(a => a.Present)
+                </div>
+                <div class="text-muted">Sessions Attended</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center border-0 shadow-sm">
+            <div class="card-body">
+                <div class="fs-1 fw-bold text-info">
+                    @Model.Where(e => e.Status == "Active").Count()
+                </div>
+                <div class="text-muted">Active Enrolments</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h4 class="mb-3">My Courses</h4>
+@foreach (var e in Model)
+{
+    var present = e.AttendanceRecords.Count(a => a.Present);
+    var total = e.AttendanceRecords.Count;
+    var pct = total > 0 ? Math.Round((double)present / total * 100) : 0;
+
+    <div class="card mb-3 shadow-sm">
+        <div class="card-body d-flex justify-content-between align-items-center">
+            <div>
+                <h5 class="mb-1">@e.Course.Name</h5>
+                <p class="text-muted small mb-0">@e.Course.Branch?.Name</p>
+            </div>
+            <div class="text-end">
+                <span class="badge @(e.Status == "Active" ? "bg-success" : "bg-secondary") mb-1">
+                    @e.Status
+                </span>
+                <div class="progress mt-1" style="height:6px;width:100px">
+                    <div class="progress-bar" style="width:@pct%"></div>
+                </div>
+                <small class="text-muted">Attendance: @pct%</small>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="d-flex gap-2 mt-3">
+    <a asp-action="MyResults" class="btn btn-outline-primary">View My Results</a>
+    <a asp-action="MyAttendance" class="btn btn-outline-secondary">View Attendance</a>
+    <a asp-action="MyProfile" class="btn btn-outline-info">My Profile</a>
+</div>
