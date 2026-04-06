@@ -32,6 +32,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\VgcCollege.Domain\VgcCollege.Domain.csproj" />
+    <ProjectReference Include="..\VgcCollege.MVC\VgcCollege.MVC.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Using Include="Xunit" />
   </ItemGroup>
 
