@@ -1,66 +1,52 @@
-﻿@model IEnumerable<VgcCollege.Domain.Entities.Exam>
+﻿@model VgcCollege.Domain.Entities.AssignmentResult
 
 @{
-    ViewData["Title"] = "My Exams";
+    ViewData["Title"] = "Grade Assignment";
+    var assignment = ViewBag.Assignment as VgcCollege.Domain.Entities.Assignment;
     var facultyId = ViewBag.FacultyId;
 }
 
 <div class="container mt-4">
-    <h1 class="mb-4">My Exams</h1>
+    <h1 class="mb-4">Grade Assignment</h1>
 
-    @if (Model.Any())
-    {
-        <table class="table table-bordered table-striped">
-            <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>Course</th>
-                    <th>Date</th>
-                    <th>Max Score</th>
-                    <th>Results Released</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var exam in Model)
-                {
-                    <tr>
-                        <td>@exam.Title</td>
-                        <td>@exam.Course?.Name</td>
-                        <td>@exam.Date.ToShortDateString()</td>
-                        <td>@exam.MaxScore</td>
-                        <td>@(exam.ResultsReleased ? "Yes" : "No")</td>
-                        <td>
-                            <a asp-action="CreateExamResult"
-                                   asp-route-examId="@exam.Id"
-                                   asp-route-facultyId="@facultyId"
-                                   class="btn btn-primary btn-sm">
-                                Grade
-                            </a>
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <p><strong>Assignment:</strong> @assignment?.Title</p>
+            <p><strong>Max Score:</strong> @assignment?.MaxScore</p>
+        </div>
+    </div>
 
-                            @if (!exam.ResultsReleased)
-                            {
-                                <form asp-action="ReleaseExamResults"
-                                      method="post"
-                                      class="d-inline">
-                                    @Html.AntiForgeryToken()
-                                    <input type="hidden" name="examId" value="@exam.Id" />
-                                    <input type="hidden" name="facultyId" value="@facultyId" />
-                                    <button type="submit" class="btn btn-success btn-sm">
-                                        Release Results
-                                    </button>
-                                </form>
-                            }
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    }
-    else
-    {
-        <p>No exams found for your courses.</p>
-    }
+    <form asp-action="CreateAssignmentResult" method="post">
+        @Html.AntiForgeryToken()
 
-    <a asp-action="Index" asp-route-id="@facultyId" class="btn btn-secondary">Back to Dashboard</a>
+        <input type="hidden" asp-for="AssignmentId" />
+        <input type="hidden" name="facultyId" value="@facultyId" />
+
+        <div class="mb-3">
+            <label asp-for="StudentProfileId" class="form-label">Student</label>
+            <select asp-for="StudentProfileId" asp-items="ViewBag.Students" class="form-select">
+                <option value="">-- Select Student --</option>
+            </select>
+            <span asp-validation-for="StudentProfileId" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Score" class="form-label"></label>
+            <input asp-for="Score" class="form-control" />
+            <span asp-validation-for="Score" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Feedback" class="form-label"></label>
+            <textarea asp-for="Feedback" class="form-control"></textarea>
+            <span asp-validation-for="Feedback" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save Result</button>
+        <a asp-action="Assignments" asp-route-id="@facultyId" class="btn btn-secondary">Cancel</a>
+    </form>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
