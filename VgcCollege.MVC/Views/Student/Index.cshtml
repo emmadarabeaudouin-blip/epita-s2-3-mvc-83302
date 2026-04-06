@@ -1,0 +1,63 @@
+﻿@model VgcCollege.Domain.Entities.StudentProfile
+
+@{
+    ViewData["Title"] = "Student Dashboard";
+}
+
+<div class="container mt-4">
+    <h1 class="mb-4">Student Dashboard</h1>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h4>Welcome, @Model.Name</h4>
+            <p class="mb-1"><strong>Email:</strong> @Model.Email</p>
+            <p class="mb-0"><strong>Student Number:</strong> @Model.StudentNumber</p>
+        </div>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5>My Profile</h5>
+                    <a asp-controller="Student" asp-action="MyProfile" asp-route-id="@Model.Id" class="btn btn-primary">
+                        View Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5>My Courses</h5>
+                    <a asp-controller="Student" asp-action="MyCourses" asp-route-id="@Model.Id" class="btn btn-primary">
+                        View Courses
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5>Assignments</h5>
+                    <a asp-controller="Student" asp-action="MyAssignments" asp-route-id="@Model.Id" class="btn btn-primary">
+                        View Assignments
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5>Exam Results</h5>
+                    <a asp-controller="Student" asp-action="MyResults" asp-route-id="@Model.Id" class="btn btn-primary">
+                        View Results
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

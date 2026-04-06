@@ -1,29 +1,31 @@
 ﻿@model VgcCollege.Domain.Entities.StudentProfile
 
 @{
-    ViewData["Title"] = "My Exam Results";
+    ViewData["Title"] = "My Assignments";
 }
 
 <div class="container mt-4">
-    <h1 class="mb-4">My Exam Results</h1>
+    <h1 class="mb-4">My Assignment Results</h1>
 
-    @if (Model.ExamResults != null && Model.ExamResults.Any())
+    @if (Model.AssignmentResults != null && Model.AssignmentResults.Any())
     {
         <table class="table table-bordered table-striped">
             <thead>
                 <tr>
-                    <th>Exam</th>
+                    <th>Assignment</th>
                     <th>Course</th>
                     <th>Mark</th>
+                    <th>Feedback</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var result in Model.ExamResults)
+                @foreach (var result in Model.AssignmentResults)
                 {
                     <tr>
-                        <td>@result.Exam?.Title</td>
-                        <td>@result.Exam?.Course?.Name</td>
+                        <td>@result.Assignment?.Title</td>
+                        <td>@result.Assignment?.Course?.Name</td>
                         <td>@result.Score</td>
+                        <td>@result.Feedback</td>
                     </tr>
                 }
             </tbody>
@@ -31,7 +33,7 @@
     }
     else
     {
-        <p>No exam results available.</p>
+        <p>No assignment results available.</p>
     }
 
     <a asp-action="Index" asp-route-id="@Model.Id" class="btn btn-secondary">Back to Dashboard</a>

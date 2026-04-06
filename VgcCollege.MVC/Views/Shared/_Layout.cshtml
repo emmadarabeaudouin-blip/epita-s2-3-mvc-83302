@@ -34,17 +34,16 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="Admin" asp-action="Students">Students</a>
+                            <a class="nav-link" asp-controller="Student" asp-action="Index" asp-route-id="1">Student</a>
                         </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Admin" asp-action="Faculty">Faculty</a>
-                        </li>
+                        
                     </ul>
 
-                    <span class="navbar-text text-light small">
+                    <span class="navbar-text text-light small me-3">
                         College Management System
                     </span>
+
+                    @await Html.PartialAsync("_LoginPartial")
                 </div>
             </div>
         </nav>
