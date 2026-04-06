@@ -12,6 +12,6 @@ namespace VgcCollege.Domain.Entities
         public int StudentProfileId { get; set; }
         public StudentProfile? StudentProfile { get; set; }
         public double Score { get; set; }
-        // Grade removed, score is used to compute grades where needed
+        
     }
 }

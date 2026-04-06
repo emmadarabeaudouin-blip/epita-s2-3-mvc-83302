@@ -1,0 +1,66 @@
+﻿@model IEnumerable<VgcCollege.Domain.Entities.Exam>
+
+@{
+    ViewData["Title"] = "My Exams";
+    var facultyId = ViewBag.FacultyId;
+}
+
+<div class="container mt-4">
+    <h1 class="mb-4">My Exams</h1>
+
+    @if (Model.Any())
+    {
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Course</th>
+                    <th>Date</th>
+                    <th>Max Score</th>
+                    <th>Results Released</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var exam in Model)
+                {
+                    <tr>
+                        <td>@exam.Title</td>
+                        <td>@exam.Course?.Name</td>
+                        <td>@exam.Date.ToShortDateString()</td>
+                        <td>@exam.MaxScore</td>
+                        <td>@(exam.ResultsReleased ? "Yes" : "No")</td>
+                        <td>
+                            <a asp-action="CreateExamResult"
+                                   asp-route-examId="@exam.Id"
+                                   asp-route-facultyId="@facultyId"
+                                   class="btn btn-primary btn-sm">
+                                Grade
+                            </a>
+
+                            @if (!exam.ResultsReleased)
+                            {
+                                <form asp-action="ReleaseExamResults"
+                                      method="post"
+                                      class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="examId" value="@exam.Id" />
+                                    <input type="hidden" name="facultyId" value="@facultyId" />
+                                    <button type="submit" class="btn btn-success btn-sm">
+                                        Release Results
+                                    </button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No exams found for your courses.</p>
+    }
+
+    <a asp-action="Index" asp-route-id="@facultyId" class="btn btn-secondary">Back to Dashboard</a>
+</div>

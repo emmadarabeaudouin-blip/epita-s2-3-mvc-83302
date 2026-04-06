@@ -1,0 +1,50 @@
+﻿@model IEnumerable<VgcCollege.Domain.Entities.Assignment>
+
+@{
+    ViewData["Title"] = "My Assignments";
+    var facultyId = ViewBag.FacultyId;
+}
+
+<div class="container mt-4">
+    <h1 class="mb-4">My Assignments</h1>
+
+    @if (Model.Any())
+    {
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Course</th>
+                    <th>Due Date</th>
+                    <th>Max Score</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var assignment in Model)
+                {
+                    <tr>
+                        <td>@assignment.Title</td>
+                        <td>@assignment.Course?.Name</td>
+                        <td>@assignment.DueDate.ToShortDateString()</td>
+                        <td>@assignment.MaxScore</td>
+                        <td>
+                            <a asp-action="CreateAssignmentResult"
+                                   asp-route-assignmentId="@assignment.Id"
+                                   asp-route-facultyId="@facultyId"
+                                   class="btn btn-primary btn-sm">
+                                Grade
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No assignments found for your courses.</p>
+    }
+
+    <a asp-action="Index" asp-route-id="@facultyId" class="btn btn-secondary">Back to Dashboard</a>
+</div>

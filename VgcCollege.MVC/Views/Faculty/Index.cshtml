@@ -48,5 +48,26 @@
                 </div>
             </div>
         </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5>My Assignments</h5>
+                    <a asp-controller="Faculty" asp-action="Assignments" asp-route-id="@Model.Id" class="btn btn-primary">
+                        View Assignments
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5>My Exams</h5>
+                    <a asp-controller="Faculty" asp-action="Exams" asp-route-id="@Model.Id" class="btn btn-primary">
+                        View Exams
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

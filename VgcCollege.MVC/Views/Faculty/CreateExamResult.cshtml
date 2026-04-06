@@ -1,0 +1,42 @@
+﻿@model VgcCollege.Domain.Entities.ExamResult
+
+@{
+    ViewData["Title"] = "Grade Exam";
+    var exam = ViewBag.Exam as VgcCollege.Domain.Entities.Exam;
+    var facultyId = ViewBag.FacultyId;
+}
+
+<div class="container mt-4">
+    <h1 class="mb-4">Grade Exam</h1>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <p><strong>Exam:</strong> @exam?.Title</p>
+            <p><strong>Max Score:</strong> @exam?.MaxScore</p>
+        </div>
+    </div>
+
+    <form asp-action="CreateExamResult" method="post">
+        @Html.AntiForgeryToken()
+
+        <input type="hidden" asp-for="ExamId" />
+        <input type="hidden" name="facultyId" value="@facultyId" />
+
+        <div class="mb-3">
+            <label asp-for="StudentProfileId" class="form-label">Student</label>
+            <select asp-for="StudentProfileId" asp-items="ViewBag.Students" class="form-select">
+                <option value="">-- Select Student --</option>
+            </select>
+            <span asp-validation-for="StudentProfileId" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Score" class="form-label"></label>
+            <input asp-for="Score" class="form-control" />
+            <span asp-validation-for="Score" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save Result</button>
+        <a asp-action="Exams" asp-route-id="@facultyId" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
