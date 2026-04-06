@@ -25,12 +25,8 @@
         </div>
         <div class="mb-4">
             <label asp-for="BranchId" class="form-label">Branch</label>
-            <select asp-for="BranchId" class="form-select">
+            <select asp-for="BranchId" class="form-select" asp-items="ViewBag.Branches">
                 <option value="">— Select Branch —</option>
-                @foreach (var b in ViewBag.Branches as List<VgcCollege.Domain.Entities.Branch>)
-                {
-                    <option value="@b.Id">@b.Name</option>
-                }
             </select>
             <span asp-validation-for="BranchId" class="text-danger small"></span>
         </div>

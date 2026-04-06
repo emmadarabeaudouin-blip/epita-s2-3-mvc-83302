@@ -8,10 +8,10 @@ namespace VgcCollege.Domain.Entities
     {
         public int Id { get; set; }
         public int ExamId { get; set; }
-        public Exam Exam { get; set; } = null!;
+        public Exam? Exam { get; set; }
         public int StudentProfileId { get; set; }
-        public StudentProfile StudentProfile { get; set; } = null!;
+        public StudentProfile? StudentProfile { get; set; }
         public double Score { get; set; }
-        public string Grade { get; set; } = string.Empty; // A, B, C, D, F
+        // Grade removed, score is used to compute grades where needed
     }
 }

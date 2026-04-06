@@ -75,9 +75,9 @@
     <div class="card-header"><strong>Exam Results</strong></div>
     <div class="card-body p-0">
         <table class="table table-sm mb-0">
-            <thead class="table-light">
-                <tr><th>Exam</th><th>Score</th><th>Max</th><th>Grade</th><th>Released</th></tr>
-            </thead>
+                <thead class="table-light">
+                    <tr><th>Exam</th><th>Score</th><th>Max</th><th>Released</th></tr>
+                </thead>
             <tbody>
                 @foreach (var er in Model.ExamResults)
                 {
@@ -85,7 +85,7 @@
                         <td>@er.Exam.Title</td>
                         <td>@er.Score</td>
                         <td>@er.Exam.MaxScore</td>
-                        <td><span class="badge bg-primary">@er.Grade</span></td>
+
                         <td>
                             <span class="badge @(er.Exam.ResultsReleased ? "bg-success" : "bg-warning text-dark")">
                                 @(er.Exam.ResultsReleased ? "Released" : "Provisional")

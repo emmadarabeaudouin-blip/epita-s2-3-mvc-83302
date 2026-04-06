@@ -71,7 +71,7 @@
 <div class="table-card mb-3">
     <div class="card-header-bar">
         <h6>Enrolled Students (@Model.Enrolments.Count)</h6>
-        <a asp-action="CreateEnrolment" class="btn btn-sm btn-primary">+ Enrol Student</a>
+        <a asp-action="CreateEnrolment" class="btn btn-sm btn-primary">+ Enroll Student</a>
     </div>
     <table class="table table-hover mb-0">
         <thead>
@@ -125,6 +125,9 @@
 <div class="table-card mb-3">
     <div class="card-header-bar">
         <h6>Assignments (@Model.Assignments.Count)</h6>
+        <div class="ms-auto">
+            <a asp-action="CreateAssignment" asp-route-courseId="@Model.Id" class="btn btn-sm btn-primary">+ New Assignment</a>
+        </div>
     </div>
     <table class="table mb-0">
         <thead>
@@ -151,6 +154,9 @@
 <!-- Exams -->
 <div class="table-card">
     <div class="card-header-bar"><h6>Exams (@Model.Exams.Count)</h6></div>
+    <div class="mb-2">
+        <a asp-action="CreateExam" asp-route-courseId="@Model.Id" class="btn btn-sm btn-primary">+ New Exam</a>
+    </div>
     <table class="table mb-0">
         <thead>
             <tr><th>Title</th><th>Date</th><th>Max Score</th><th>Results</th></tr>

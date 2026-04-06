@@ -29,14 +29,33 @@
                             <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Admin" asp-action="Index">Admin</a>
-                        </li>
+                        @* Admin-only links *@
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Admin" asp-action="Index">Admin</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Admin" asp-action="Students">Students</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Admin" asp-action="Faculty">Faculty</a>
+                            </li>
+                        }
 
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Student" asp-action="Index" asp-route-id="1">Student</a>
-                        </li>
-                        
+                        @* Student-only links *@
+                        @if (User.IsInRole("Student"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Student" asp-action="Index" asp-route-id="1">Student</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Student" asp-action="MyCourses" asp-route-id="1">My Courses</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Student" asp-action="MyResults" asp-route-id="1">My Results</a>
+                            </li>
+                        }
                     </ul>
 
                     <span class="navbar-text text-light small me-3">

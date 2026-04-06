@@ -1,0 +1,38 @@
+@model IEnumerable<VgcCollege.Domain.Entities.ExamResult>
+
+@{
+    ViewData["Title"] = "Exam Results";
+}
+
+<div class="container mt-4">
+    <h1>Exam Results</h1>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+
+    <p>
+        <a asp-action="CreateExamResult" class="btn btn-primary">Post Exam Result</a>
+    </p>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Exam</th>
+                <th>Student</th>
+                <th>Score</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var r in Model)
+            {
+                <tr>
+                    <td>@r.Exam?.Title</td>
+                    <td>@r.StudentProfile?.Name</td>
+                    <td>@r.Score</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

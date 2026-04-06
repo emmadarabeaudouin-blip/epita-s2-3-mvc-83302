@@ -55,7 +55,7 @@
             <div class="card-body p-0">
                 <table class="table table-sm mb-0">
                     <thead class="table-light">
-                        <tr><th>Student</th><th>Score</th><th>Grade</th></tr>
+                        <tr><th>Student</th><th>Score</th></tr>
                     </thead>
                     <tbody>
                     @foreach (var r in group)
@@ -63,7 +63,6 @@
                         <tr>
                             <td>@r.StudentProfile.Name</td>
                             <td class="text-end">@r.Score</td>
-                            <td class="text-end">@r.Grade</td>
                         </tr>
                     }
                     </tbody>

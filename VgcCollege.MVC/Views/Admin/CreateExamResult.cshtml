@@ -1,0 +1,38 @@
+@using Microsoft.AspNetCore.Mvc.Rendering
+@model VgcCollege.Domain.Entities.ExamResult
+
+@{
+    ViewData["Title"] = "Post Exam Result";
+}
+
+<div class="container mt-4">
+    <h1>Post Exam Result</h1>
+
+    <form asp-action="CreateExamResult" method="post">
+        @Html.AntiForgeryToken()
+
+        <div class="mb-3">
+            <label class="form-label">Exam</label>
+            <select asp-for="ExamId" class="form-select" asp-items="ViewBag.Exams">
+                <option value="">-- Select Exam --</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Student</label>
+            <select asp-for="StudentProfileId" class="form-select" asp-items="ViewBag.Students">
+                <option value="">-- Select Student --</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Score</label>
+            <input asp-for="Score" class="form-control" />
+        </div>
+
+        @* Grade is derived from score; removed grade input *@
+
+        <button type="submit" class="btn btn-primary">Post</button>
+        <a asp-action="ExamResults" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>

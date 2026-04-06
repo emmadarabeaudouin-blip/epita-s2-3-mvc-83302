@@ -11,10 +11,12 @@ namespace VgcCollege.MVC.Controllers
     public class AdminController : Controller
     {
         private readonly AppDbContext _db;
+        private readonly Microsoft.Extensions.Logging.ILogger<AdminController> _logger;
 
-        public AdminController(AppDbContext db)
+        public AdminController(AppDbContext db, Microsoft.Extensions.Logging.ILogger<AdminController> logger)
         {
             _db = db;
+            _logger = logger;
         }
 
         // DASHBOARD
@@ -142,6 +144,90 @@ namespace VgcCollege.MVC.Controllers
             return View(course);
         }
 
+        // CREATE ASSIGNMENT
+        public IActionResult CreateAssignment(int courseId)
+        {
+            var course = _db.Courses.Find(courseId);
+            if (course == null) return NotFound();
+
+            ViewBag.Course = course;
+            var model = new Assignment
+            {
+                CourseId = courseId,
+                DueDate = DateTime.UtcNow.AddDays(7)
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CreateAssignment(Assignment model, int? courseId)
+        {
+            _logger?.LogInformation("CreateAssignment POST invoked for CourseId route={CourseId} model.CourseId={ModelCourseId} Title={Title}", courseId, model?.CourseId, model?.Title);
+            if (!ModelState.IsValid)
+            {
+                _logger?.LogWarning("CreateAssignment modelstate invalid: {Errors}", string.Join(";", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)));
+            }
+
+            // ensure CourseId is set (handle binding cases)
+            if ((model.CourseId == 0 || model.CourseId == default) && courseId.HasValue)
+                model.CourseId = courseId.Value;
+
+            // remove validation for the navigation property (Course) which is populated server-side
+            ModelState.Remove(nameof(Assignment.Course));
+
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Course = _db.Courses.Find(model.CourseId == 0 ? courseId : model.CourseId);
+                // show validation errors at top of form
+                TempData["Error"] = string.Join("; ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage));
+                return View(model);
+            }
+
+            if (model.DueDate == default)
+                model.DueDate = DateTime.UtcNow.AddDays(7);
+
+            _db.Assignments.Add(model);
+            _db.SaveChanges();
+
+            TempData["Success"] = "Assignment created.";
+            return RedirectToAction(nameof(CourseDetails), new { id = model.CourseId });
+        }
+
+        // CREATE EXAM
+        public IActionResult CreateExam(int courseId)
+        {
+            var course = _db.Courses.Find(courseId);
+            if (course == null) return NotFound();
+
+            ViewBag.Course = course;
+            var model = new Exam
+            {
+                CourseId = courseId,
+                Date = DateTime.UtcNow.AddDays(14)
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CreateExam(Exam model)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Course = _db.Courses.Find(model.CourseId);
+                return View(model);
+            }
+
+            _db.Exams.Add(model);
+            _db.SaveChanges();
+
+            TempData["Success"] = "Exam created.";
+            return RedirectToAction(nameof(CourseDetails), new { id = model.CourseId });
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult EditCourse(Course model)
@@ -156,6 +242,27 @@ namespace VgcCollege.MVC.Controllers
             _db.SaveChanges();
 
             return RedirectToAction(nameof(Courses));
+        }
+
+        public IActionResult CourseDetails(int id)
+        {
+            var course = _db.Courses
+                .Include(c => c.Branch)
+                .Include(c => c.Enrolments)
+                    .ThenInclude(e => e.StudentProfile)
+                .Include(c => c.Enrolments)
+                    .ThenInclude(e => e.AttendanceRecords)
+                .Include(c => c.Assignments)
+                    .ThenInclude(a => a.Results)
+                .Include(c => c.Exams)
+                    .ThenInclude(ex => ex.Results)
+                .Include(c => c.FacultyAssignments)
+                    .ThenInclude(fa => fa.FacultyProfile)
+                .FirstOrDefault(c => c.Id == id);
+
+            if (course == null) return NotFound();
+
+            return View(course);
         }
 
         [HttpPost]
@@ -465,8 +572,98 @@ namespace VgcCollege.MVC.Controllers
             return RedirectToAction(nameof(Enrolments));
         }
 
+        public IActionResult EnrolmentDetails(int id)
+        {
+            var enrolment = _db.CourseEnrolments
+                .Include(e => e.StudentProfile)
+                .Include(e => e.Course)
+                    .ThenInclude(c => c.Branch)
+                .Include(e => e.AttendanceRecords)
+                .FirstOrDefault(e => e.Id == id);
+
+            if (enrolment == null) return NotFound();
+
+            return View(enrolment);
+        }
+
+        // ATTENDANCE CRUD (Admin)
+        public IActionResult CreateAttendance(int enrolmentId)
+        {
+            var enrolment = _db.CourseEnrolments.Find(enrolmentId);
+            if (enrolment == null) return NotFound();
+
+            var model = new VgcCollege.Domain.Entities.AttendanceRecord
+            {
+                CourseEnrolmentId = enrolmentId,
+                Date = DateTime.UtcNow
+            };
+
+            ViewBag.Enrolment = enrolment;
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CreateAttendance(VgcCollege.Domain.Entities.AttendanceRecord model)
+        {
+            if (!ModelState.IsValid)
+            {
+                var enrol = _db.CourseEnrolments.Find(model.CourseEnrolmentId);
+                ViewBag.Enrolment = enrol;
+                return View(model);
+            }
+
+            _db.AttendanceRecords.Add(model);
+            _db.SaveChanges();
+
+            return RedirectToAction(nameof(EnrolmentDetails), new { id = model.CourseEnrolmentId });
+        }
+
+        public IActionResult EditAttendance(int id)
+        {
+            var att = _db.AttendanceRecords
+                .Include(a => a.CourseEnrolment)
+                    .ThenInclude(e => e.StudentProfile)
+                .FirstOrDefault(a => a.Id == id);
+            if (att == null) return NotFound();
+
+            ViewBag.Enrolment = att.CourseEnrolment;
+            return View(att);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult EditAttendance(VgcCollege.Domain.Entities.AttendanceRecord model)
+        {
+            if (!ModelState.IsValid)
+            {
+                var enrol = _db.CourseEnrolments.Find(model.CourseEnrolmentId);
+                ViewBag.Enrolment = enrol;
+                return View(model);
+            }
+
+            _db.AttendanceRecords.Update(model);
+            _db.SaveChanges();
+
+            return RedirectToAction(nameof(EnrolmentDetails), new { id = model.CourseEnrolmentId });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteAttendance(int id)
+        {
+            var att = _db.AttendanceRecords.Find(id);
+            if (att == null) return NotFound();
+
+            var enrolmentId = att.CourseEnrolmentId;
+            _db.AttendanceRecords.Remove(att);
+            _db.SaveChanges();
+
+            return RedirectToAction(nameof(EnrolmentDetails), new { id = enrolmentId });
+        }
+
         // FACULTY ASSIGNMENTS
-       
+
         public IActionResult FacultyAssignments()
         {
             var assignments = _db.FacultyCourseAssignments
@@ -476,6 +673,78 @@ namespace VgcCollege.MVC.Controllers
                 .ToList();
 
             return View(assignments);
+        }
+
+        // ASSIGNMENT RESULTS (Admin)
+        public IActionResult AssignmentResults()
+        {
+            var results = _db.AssignmentResults
+                .Include(ar => ar.Assignment)
+                .Include(ar => ar.StudentProfile)
+                .ToList();
+
+            return View(results);
+        }
+
+        public IActionResult CreateAssignmentResult()
+        {
+            ViewBag.Assignments = new SelectList(_db.Assignments, "Id", "Title");
+            ViewBag.Students = new SelectList(_db.StudentProfiles, "Id", "Name");
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CreateAssignmentResult(VgcCollege.Domain.Entities.AssignmentResult model)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Assignments = new SelectList(_db.Assignments, "Id", "Title", model.AssignmentId);
+                ViewBag.Students = new SelectList(_db.StudentProfiles, "Id", "Name", model.StudentProfileId);
+                return View(model);
+            }
+
+            _db.AssignmentResults.Add(model);
+            _db.SaveChanges();
+
+            TempData["Success"] = "Assignment result posted.";
+            return RedirectToAction(nameof(AssignmentResults));
+        }
+
+        // EXAM RESULTS (Admin)
+        public IActionResult ExamResults()
+        {
+            var results = _db.ExamResults
+                .Include(er => er.Exam)
+                .Include(er => er.StudentProfile)
+                .ToList();
+
+            return View(results);
+        }
+
+        public IActionResult CreateExamResult()
+        {
+            ViewBag.Exams = new SelectList(_db.Exams, "Id", "Title");
+            ViewBag.Students = new SelectList(_db.StudentProfiles, "Id", "Name");
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CreateExamResult(VgcCollege.Domain.Entities.ExamResult model)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Exams = new SelectList(_db.Exams, "Id", "Title", model.ExamId);
+                ViewBag.Students = new SelectList(_db.StudentProfiles, "Id", "Name", model.StudentProfileId);
+                return View(model);
+            }
+
+            _db.ExamResults.Add(model);
+            _db.SaveChanges();
+
+            TempData["Success"] = "Exam result posted.";
+            return RedirectToAction(nameof(ExamResults));
         }
 
         // New AssignFaculty actions to support the custom view at Views/Admin/AssignFaculty.cshtml

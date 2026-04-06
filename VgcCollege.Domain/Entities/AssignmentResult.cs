@@ -8,9 +8,9 @@ namespace VgcCollege.Domain.Entities
     {
         public int Id { get; set; }
         public int AssignmentId { get; set; }
-        public Assignment Assignment { get; set; } = null!;
+        public Assignment? Assignment { get; set; }
         public int StudentProfileId { get; set; }
-        public StudentProfile StudentProfile { get; set; } = null!;
+        public StudentProfile? StudentProfile { get; set; }
         public double Score { get; set; }
         public string? Feedback { get; set; }
         public DateTime SubmittedAt { get; set; } = DateTime.Now;

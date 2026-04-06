@@ -1,0 +1,40 @@
+@model VgcCollege.Domain.Entities.AttendanceRecord
+@{
+    ViewData["Title"] = "Add Attendance";
+}
+
+<div class="page-header">
+    <h1>Add Attendance</h1>
+</div>
+
+<div class="form-card">
+    <form asp-action="CreateAttendance" method="post">
+        @Html.AntiForgeryToken()
+        <input asp-for="CourseEnrolmentId" type="hidden" />
+
+        <div class="mb-3">
+            <label class="form-label">Week Number</label>
+            <input asp-for="WeekNumber" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Date</label>
+            <input asp-for="Date" type="date" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Present</label>
+            <select asp-for="Present" class="form-select">
+                <option value="true">Present</option>
+                <option value="false">Absent</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Notes</label>
+            <textarea asp-for="Notes" class="form-control"></textarea>
+        </div>
+
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a asp-action="Enrolments" class="btn btn-outline-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
