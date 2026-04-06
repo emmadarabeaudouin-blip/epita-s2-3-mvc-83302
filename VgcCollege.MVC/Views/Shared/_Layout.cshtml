@@ -56,6 +56,18 @@
                                 <a class="nav-link" asp-controller="Student" asp-action="MyResults" asp-route-id="1">My Results</a>
                             </li>
                         }
+                        @if (User.IsInRole("Faculty"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Faculty" asp-action="Index" asp-route-id="1">Faculty</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Faculty" asp-action="MyCourses" asp-route-id="1">Faculty Courses</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Faculty" asp-action="MyStudents" asp-route-id="1">Faculty Students</a>
+                            </li>
+                        }
                     </ul>
 
                     <span class="navbar-text text-light small me-3">

@@ -1,0 +1,40 @@
+﻿@model VgcCollege.Domain.Entities.FacultyProfile
+
+@{
+    ViewData["Title"] = "My Courses";
+}
+
+<div class="container mt-4">
+    <h1 class="mb-4">My Courses</h1>
+
+    @if (Model.CourseAssignments != null && Model.CourseAssignments.Any())
+    {
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Course</th>
+                    <th>Branch</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var assignment in Model.CourseAssignments)
+                {
+                    <tr>
+                        <td>@assignment.Course?.Name</td>
+                        <td>@assignment.Course?.Branch?.Name</td>
+                        <td>@assignment.Course?.StartDate.ToShortDateString()</td>
+                        <td>@assignment.Course?.EndDate.ToShortDateString()</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No assigned courses found.</p>
+    }
+
+    <a asp-action="Index" asp-route-id="@Model.Id" class="btn btn-secondary">Back to Dashboard</a>
+</div>

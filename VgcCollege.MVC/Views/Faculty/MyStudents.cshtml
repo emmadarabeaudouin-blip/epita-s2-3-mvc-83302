@@ -1,46 +1,55 @@
-﻿@model List<VgcCollege.Domain.Entities.CourseEnrolment>
+﻿@model VgcCollege.Domain.Entities.FacultyProfile
+
 @{
     ViewData["Title"] = "My Students";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h2>My Students</h2>
-    <a asp-action="Dashboard" class="btn btn-outline-dark">Back</a>
-</div>
+<div class="container mt-4">
+    <h1 class="mb-4">My Students</h1>
 
-<table class="table table-hover shadow-sm">
-    <thead class="table-dark">
-        <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Course</th>
-            <th>Branch</th>
-            <th>Status</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var e in Model)
+    @if (Model.CourseAssignments != null && Model.CourseAssignments.Any())
+    {
+        @foreach (var assignment in Model.CourseAssignments)
         {
-            <tr>
-                <td>@e.StudentProfile.Name</td>
-                <td>@e.StudentProfile.Email</td>
-                <td>@e.Course.Name</td>
-                <td>@e.Course.Branch?.Name</td>
-                <td>
-                    <span class="badge @(e.Status == "Active" ? "bg-success" : "bg-secondary")">
-                        @e.Status
-                    </span>
-                </td>
-                <td>
-                    <a asp-action="StudentDetail" asp-route-id="@e.StudentProfile.Id"
-                       class="btn btn-sm btn-outline-primary">View Profile</a>
-                </td>
-            </tr>
+            <div class="card shadow-sm mb-4">
+                <div class="card-header">
+                    <strong>Course:</strong> @assignment.Course?.Name
+                </div>
+                <div class="card-body">
+                    @if (assignment.Course?.Enrolments != null && assignment.Course.Enrolments.Any())
+                    {
+                        <table class="table table-bordered table-striped mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Student Name</th>
+                                    <th>Enrol Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var enrolment in assignment.Course.Enrolments)
+                                {
+                                    <tr>
+                                        <td>@enrolment.StudentProfile?.Name</td>
+                                        <td>@enrolment.EnrolDate.ToShortDateString()</td>
+                                        <td>@enrolment.Status</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <p class="mb-0">No students enrolled in this course.</p>
+                    }
+                </div>
+            </div>
         }
-        @if (!Model.Any())
-        {
-            <tr><td colspan="6" class="text-center text-muted py-3">No students assigned yet.</td></tr>
-        }
-    </tbody>
-</table>
+    }
+    else
+    {
+        <p>No assigned courses found.</p>
+    }
+
+    <a asp-action="Index" asp-route-id="@Model.Id" class="btn btn-secondary">Back to Dashboard</a>
+</div>
