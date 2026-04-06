@@ -1,34 +1,56 @@
 ﻿@model List<VgcCollege.Domain.Entities.Branch>
-@{ ViewData["Title"] = "Branches"; }
+@{
+    ViewData["Title"] = "Branches";
+}
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h2>Branches</h2>
-    <a asp-action="CreateBranch" class="btn btn-primary">+ New branch</a>
+<div class="page-header">
+    <div>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-action="Index">Dashboard</a></li>
+                <li class="breadcrumb-item active">Branches</li>
+            </ol>
+        </nav>
+        <h1>Branches</h1>
+    </div>
+    <a asp-action="CreateBranch" class="btn btn-primary">+ New Branch</a>
 </div>
 
-<div class="row g-3">
-@foreach (var branch in Model)
-{
-    <div class="col-md-4">
-        <div class="card h-100 shadow-sm">
-            <div class="card-body">
-                <h5 class="card-title">@branch.Name</h5>
-                <p class="text-muted small">@branch.Address</p>
-                <span class="badge bg-secondary">@branch.Courses.Count course</span>
-            </div>
-            <div class="card-footer d-flex gap-2">
-                <a asp-action="BranchDetails" asp-route-id="@branch.Id"
-                   class="btn btn-sm btn-outline-primary">Details</a>
-                <a asp-action="EditBranch" asp-route-id="@branch.Id"
-                   class="btn btn-sm btn-outline-secondary">Edit</a>
-                <form asp-action="DeleteBranch" method="post" class="d-inline"
-                      onsubmit="return confirm('Delete this branch ?')">
-                    <input type="hidden" name="id" value="@branch.Id" />
-                    @Html.AntiForgeryToken()
-                    <button class="btn btn-sm btn-outline-danger">Delete</button>
-                </form>
-            </div>
-        </div>
-    </div>
-}
+<div class="table-card">
+    <table class="table table-hover mb-0">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Courses</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var b in Model)
+            {
+                <tr>
+                    <td><strong>@b.Name</strong></td>
+                    <td class="text-muted">@b.Address</td>
+                    <td><span class="badge bg-primary rounded-pill">@b.Courses.Count</span></td>
+                    <td class="text-end">
+                        <a asp-action="BranchDetails" asp-route-id="@b.Id"
+                           class="btn btn-sm btn-outline-primary me-1">Details</a>
+                        <a asp-action="EditBranch" asp-route-id="@b.Id"
+                           class="btn btn-sm btn-outline-secondary me-1">Edit</a>
+                        <form asp-action="DeleteBranch" method="post" class="d-inline"
+                              onsubmit="return confirm('Delete this branch?')">
+                            <input type="hidden" name="id" value="@b.Id" />
+                            @Html.AntiForgeryToken()
+                            <button class="btn btn-sm btn-outline-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+            @if (!Model.Any())
+            {
+                <tr><td colspan="4" class="text-center text-muted py-4">No branches yet.</td></tr>
+            }
+        </tbody>
+    </table>
 </div>

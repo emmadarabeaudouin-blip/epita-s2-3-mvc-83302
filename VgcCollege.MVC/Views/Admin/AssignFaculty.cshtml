@@ -1,0 +1,44 @@
+﻿@using Microsoft.AspNetCore.Mvc.Rendering
+
+@{
+    ViewData["Title"] = "Assign Faculty";
+}
+
+<div class="container mt-4">
+    <h1 class="mb-3">Assign Faculty to Course</h1>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+
+    <form asp-action="AssignFaculty" method="post">
+        @Html.AntiForgeryToken()
+
+        <div class="mb-3">
+            <label class="form-label">Faculty Member</label>
+            <select name="facultyProfileId" class="form-select" asp-items="ViewBag.Faculty">
+                <option value="">-- Select Faculty --</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Course</label>
+            <select name="courseId" class="form-select" asp-items="ViewBag.Courses">
+                <option value="">-- Select Course --</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Assign</button>
+        <a asp-action="Faculty" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}

@@ -4,45 +4,37 @@
     ViewData["Title"] = "Student Details";
 }
 
-<h1>Student Details</h1>
+<div class="container mt-4">
+    <h1 class="mb-3">Student Details</h1>
 
-<div class="card p-3 mb-4">
-    <h4>@Model.Name</h4>
-    <p><strong>Student Number:</strong> @Model.StudentNumber</p>
-    <p><strong>Email:</strong> @Model.Email</p>
-    <p><strong>Phone:</strong> @Model.Phone</p>
-    <p><strong>Address:</strong> @Model.Address</p>
-    <p><strong>DOB:</strong> @Model.DateOfBirth.ToShortDateString()</p>
-</div>
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <p><strong>Name:</strong> @Model.Name</p>
+            <p><strong>Email:</strong> @Model.Email</p>
+            <p><strong>Student Number:</strong> @Model.StudentNumber</p>
+        </div>
+    </div>
 
-<h4>Enrolments</h4>
-@if (Model.Enrolments.Any())
-{
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Course</th>
-                <th>Branch</th>
-                <th>Enrol Date</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
+    <h3>Enrolments</h3>
+    @if (Model.Enrolments.Any())
+    {
+        <ul class="list-group mb-4">
             @foreach (var enrolment in Model.Enrolments)
             {
-                <tr>
-                    <td>@enrolment.Course?.Name</td>
-                    <td>@enrolment.Course?.Branch?.Name</td>
-                    <td>@enrolment.EnrolDate.ToShortDateString()</td>
-                    <td>@enrolment.Status</td>
-                </tr>
+                <li class="list-group-item">
+                    @enrolment.Course?.Name
+                    @if (enrolment.Course?.Branch != null)
+                    {
+                        <span>- @enrolment.Course.Branch.Name</span>
+                    }
+                </li>
             }
-        </tbody>
-    </table>
-}
-else
-{
-    <p>No enrolments found.</p>
-}
+        </ul>
+    }
+    else
+    {
+        <p>No enrolments.</p>
+    }
 
-<a asp-action="Students" class="btn btn-secondary">Back</a>
+    <a asp-action="Students" class="btn btn-secondary">Back</a>
+</div>

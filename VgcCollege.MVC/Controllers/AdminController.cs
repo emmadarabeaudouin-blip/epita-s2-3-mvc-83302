@@ -478,6 +478,56 @@ namespace VgcCollege.MVC.Controllers
             return View(assignments);
         }
 
+        // New AssignFaculty actions to support the custom view at Views/Admin/AssignFaculty.cshtml
+        public IActionResult AssignFaculty()
+        {
+            ViewBag.Faculty = new SelectList(_db.FacultyProfiles, "Id", "Name");
+            ViewBag.Courses = new SelectList(_db.Courses, "Id", "Name");
+            return View("AssignFaculty");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult AssignFaculty(int facultyProfileId, int courseId)
+        {
+            // Validate that user selected both faculty and course
+            if (facultyProfileId == 0)
+                ModelState.AddModelError("facultyProfileId", "Please select a faculty member.");
+            if (courseId == 0)
+                ModelState.AddModelError("courseId", "Please select a course.");
+
+            if (ModelState.IsValid)
+            {
+                var exists = _db.FacultyCourseAssignments.Any(a =>
+                    a.FacultyProfileId == facultyProfileId &&
+                    a.CourseId == courseId);
+
+                if (exists)
+                {
+                    ModelState.AddModelError("", "This faculty member is already assigned to that course.");
+                }
+            }
+
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Faculty = new SelectList(_db.FacultyProfiles, "Id", "Name", facultyProfileId);
+                ViewBag.Courses = new SelectList(_db.Courses, "Id", "Name", courseId);
+                return View("AssignFaculty");
+            }
+
+            var assignment = new VgcCollege.Domain.Entities.FacultyCourseAssignment
+            {
+                FacultyProfileId = facultyProfileId,
+                CourseId = courseId
+            };
+
+            _db.FacultyCourseAssignments.Add(assignment);
+            _db.SaveChanges();
+
+            TempData["Success"] = "Faculty assigned successfully.";
+            return RedirectToAction(nameof(FacultyAssignments));
+        }
+
         public IActionResult CreateFacultyAssignment()
         {
             ViewBag.Faculty = new SelectList(_db.FacultyProfiles, "Id", "Name");

@@ -4,44 +4,36 @@
     ViewData["Title"] = "Faculty Details";
 }
 
-<h1>Faculty Details</h1>
+<div class="container mt-4">
+    <h1 class="mb-3">Faculty Details</h1>
 
-<div class="card p-3 mb-4">
-    <h4>@Model.Name</h4>
-    <p><strong>Email:</strong> @Model.Email</p>
-    <p><strong>Phone:</strong> @Model.Phone</p>
-</div>
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <p><strong>Name:</strong> @Model.Name</p>
+            <p><strong>Email:</strong> @Model.Email</p>
+        </div>
+    </div>
 
-<h4>Assigned Courses</h4>
-@if (Model.CourseAssignments.Any())
-{
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Course</th>
-                <th>Branch</th>
-                <th>Dates</th>
-            </tr>
-        </thead>
-        <tbody>
+    <h3>Assigned Courses</h3>
+    @if (Model.CourseAssignments.Any())
+    {
+        <ul class="list-group mb-4">
             @foreach (var assignment in Model.CourseAssignments)
             {
-                <tr>
-                    <td>@assignment.Course?.Name</td>
-                    <td>@assignment.Course?.Branch?.Name</td>
-                    <td>
-                        @assignment.Course?.StartDate.ToShortDateString()
-                        -
-                        @assignment.Course?.EndDate.ToShortDateString()
-                    </td>
-                </tr>
+                <li class="list-group-item">
+                    @assignment.Course?.Name
+                    @if (assignment.Course?.Branch != null)
+                    {
+                        <span>- @assignment.Course.Branch.Name</span>
+                    }
+                </li>
             }
-        </tbody>
-    </table>
-}
-else
-{
-    <p>No course assignments found.</p>
-}
+        </ul>
+    }
+    else
+    {
+        <p>No assigned courses.</p>
+    }
 
-<a asp-action="Faculty" class="btn btn-secondary">Back</a>
+    <a asp-action="Faculty" class="btn btn-secondary">Back</a>
+</div>

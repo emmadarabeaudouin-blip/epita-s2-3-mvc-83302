@@ -1,30 +1,37 @@
-﻿@model VgcCollege.Domain.Entities.Branch
+﻿
+@model VgcCollege.Domain.Entities.Branch
 @{
-    ViewData["Title"] = "New branch";
+    ViewData["Title"] = "New Branch";
 }
 
-<h2 class="mb-4">New branch</h2>
-
-<div class="card shadow-sm" style="max-width:500px">
-    <div class="card-body">
-        <form asp-action="CreateBranch" method="post">
-            @Html.AntiForgeryToken()
-
-            <div class="mb-3">
-                <label asp-for="Name" class="form-label">Name</label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger small"></span>
-            </div>
-            <div class="mb-3">
-                <label asp-for="Address" class="form-label">Address</label>
-                <input asp-for="Address" class="form-control" />
-                <span asp-validation-for="Address" class="text-danger small"></span>
-            </div>
-
-            <div class="d-flex gap-2">
-                <button type="submit" class="btn btn-primary">Create</button>
-                <a asp-action="Branches" class="btn btn-outline-secondary">Cancel</a>
-            </div>
-        </form>
+<div class="page-header">
+    <div>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-action="Branches">Branches</a></li>
+                <li class="breadcrumb-item active">New Branch</li>
+            </ol>
+        </nav>
+        <h1>New Branch</h1>
     </div>
+</div>
+
+<div class="form-card">
+    <form asp-action="CreateBranch" method="post">
+        @Html.AntiForgeryToken()
+        <div class="mb-4">
+            <label asp-for="Name" class="form-label">Branch Name</label>
+            <input asp-for="Name" class="form-control" placeholder="e.g. Dublin Campus" />
+            <span asp-validation-for="Name" class="text-danger small"></span>
+        </div>
+        <div class="mb-4">
+            <label asp-for="Address" class="form-label">Address</label>
+            <input asp-for="Address" class="form-control" placeholder="e.g. 1 College St, Dublin" />
+            <span asp-validation-for="Address" class="text-danger small"></span>
+        </div>
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary">Create Branch</button>
+            <a asp-action="Branches" class="btn btn-outline-secondary">Cancel</a>
+        </div>
+    </form>
 </div>

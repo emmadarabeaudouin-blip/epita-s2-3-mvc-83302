@@ -1,82 +1,96 @@
 ﻿@model VgcCollege.Domain.Entities.CourseEnrolment
 @{
-    ViewData["Title"] = "Enrolments — " + Model.StudentProfile.Name;
+    ViewData["Title"] = "Enrolment Details";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h2>Enrolments</h2>
+<div class="page-header">
+    <div>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-action="Enrolments">Enrolments</a></li>
+                <li class="breadcrumb-item active">@Model.StudentProfile?.Name</li>
+            </ol>
+        </nav>
+        <h1>Enrolment Details</h1>
+    </div>
     <a asp-action="Enrolments" class="btn btn-outline-dark">Back</a>
 </div>
 
 <div class="row g-3 mb-4">
     <div class="col-md-6">
-        <div class="card shadow-sm h-100">
-            <div class="card-header"><strong>Students</strong></div>
-            <div class="card-body">
-                <p><strong>Name :</strong> @Model.StudentProfile.Name</p>
-                <p><strong>Email :</strong> @Model.StudentProfile.Email</p>
-                <a asp-action="StudentDetails" asp-route-id="@Model.StudentProfile.Id"
-                   class="btn btn-sm btn-outline-info">See complete profile</a>
+        <div class="detail-card">
+            <div class="detail-header">Student</div>
+            <div class="detail-body">
+                <table class="table table-borderless table-sm mb-0">
+                    <tr><td class="text-muted" style="width:120px">Name</td><td><strong>@Model.StudentProfile?.Name</strong></td></tr>
+                    <tr><td class="text-muted">Email</td><td>@Model.StudentProfile?.Email</td></tr>
+                    <tr><td class="text-muted">Phone</td><td>@Model.StudentProfile?.Phone</td></tr>
+                </table>
+                <a asp-action="StudentDetails" asp-route-id="@Model.StudentProfile!.Id"
+                   class="btn btn-sm btn-outline-primary mt-2">Full Profile</a>
             </div>
         </div>
     </div>
     <div class="col-md-6">
-        <div class="card shadow-sm h-100">
-            <div class="card-header"><strong>Cours</strong></div>
-            <div class="card-body">
-                <p><strong>Courses :</strong> @Model.Course.Name</p>
-                <p><strong>Branch :</strong> @Model.Course.Branch.Name</p>
-                <p>
-                    <strong>Status :</strong>
-                    <span class="badge @(Model.Status == "Active" ? "bg-success" : "bg-secondary")">
-                        @Model.Status
-                    </span>
-                </p>
-                <a asp-action="CourseDetails" asp-route-id="@Model.Course.Id"
-                   class="btn btn-sm btn-outline-primary">See course</a>
+        <div class="detail-card">
+            <div class="detail-header">Course</div>
+            <div class="detail-body">
+                <table class="table table-borderless table-sm mb-0">
+                    <tr><td class="text-muted" style="width:120px">Course</td><td><strong>@Model.Course?.Name</strong></td></tr>
+                    <tr><td class="text-muted">Branch</td><td>@Model.Course?.Branch?.Name</td></tr>
+                    <tr>
+                        <td class="text-muted">Status</td>
+                        <td>
+                            <span class="badge @(Model.Status == "Active" ? "bg-success" : "bg-secondary")">
+                                @Model.Status
+                            </span>
+                        </td>
+                    </tr>
+                    <tr><td class="text-muted">Enrolled</td><td>@Model.EnrolDate.ToString("dd/MM/yyyy")</td></tr>
+                </table>
+                <a asp-action="CourseDetails" asp-route-id="@Model.Course!.Id"
+                   class="btn btn-sm btn-outline-primary mt-2">View Course</a>
             </div>
         </div>
     </div>
 </div>
 
-<div class="card shadow-sm">
-    <div class="card-header d-flex justify-content-between align-items-center">
-        <strong>
-            Attendance —
-            @Model.AttendanceRecords.Count(a => a.Present) /
-            @Model.AttendanceRecords.Count weeks
-        </strong>
+<!-- Attendance -->
+@{
+    var present = Model.AttendanceRecords?.Count(a => a.Present) ?? 0;
+    var total = Model.AttendanceRecords?.Count ?? 0;
+    var pct = total > 0 ? (int)Math.Round((double)present / total * 100) : 0;
+}
+
+<div class="table-card">
+    <div class="card-header-bar">
+        <h6>Attendance — @present / @total sessions (@pct%)</h6>
     </div>
-    <div class="card-body p-0">
-        <table class="table table-sm mb-0">
-            <thead class="table-light">
-                <tr><th>Week</th><th>Date</th><th>Present</th><th>Notes</th></tr>
-            </thead>
-            <tbody>
-                @foreach (var att in Model.AttendanceRecords.OrderBy(a => a.WeekNumber))
+    <table class="table table-hover mb-0">
+        <thead>
+            <tr><th>Week</th><th>Date</th><th>Status</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+            @if (Model.AttendanceRecords != null && Model.AttendanceRecords.Any())
+            {
+                foreach (var att in Model.AttendanceRecords.OrderBy(a => a.WeekNumber))
                 {
                     <tr>
                         <td>Week @att.WeekNumber</td>
                         <td>@att.Date.ToString("dd/MM/yyyy")</td>
                         <td>
-                            @if (att.Present)
-                            {
-                                <span class="badge bg-success">Present</span>
-                            }
-                            else
-                            {
-
-                                <span class="badge bg-danger">Absent</span>
-                            }
+                            <span class="badge @(att.Present ? "bg-success" : "bg-danger")">
+                                @(att.Present ? "Present" : "Absent")
+                            </span>
                         </td>
-                        <td>@att.Notes</td>
+                        <td class="text-muted">@att.Notes</td>
                     </tr>
                 }
-                @if (!Model.AttendanceRecords.Any())
-                {
-                    <tr><td colspan="4" class="text-center text-muted py-3">No attendance registered</td></tr>
-                }
-            </tbody>
-        </table>
-    </div>
+            }
+            else
+            {
+                <tr><td colspan="4" class="text-center text-muted py-4">No attendance records yet.</td></tr>
+            }
+        </tbody>
+    </table>
 </div>

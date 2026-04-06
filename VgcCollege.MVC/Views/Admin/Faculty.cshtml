@@ -4,52 +4,55 @@
     ViewData["Title"] = "Faculty";
 }
 
-<h1>Faculty</h1>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>Faculty</h1>
+        <div>
+            <a asp-action="AssignFaculty" class="btn btn-primary">Assign Faculty</a>
+            <a asp-action="CreateFaculty" class="btn btn-success">+ Add Faculty</a>
+        </div>
+    </div>
 
-@if (TempData["Success"] != null)
-{
-    <div class="alert alert-success">@TempData["Success"]</div>
-}
-@if (TempData["Error"] != null)
-{
-    <div class="alert alert-danger">@TempData["Error"]</div>
-}
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
 
-<p>
-    <a asp-action="CreateFaculty" class="btn btn-primary">Add New Faculty</a>
-</p>
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Assignments</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var faculty in Model)
-        {
+    <table class="table table-bordered table-striped">
+        <thead>
             <tr>
-                <td>@faculty.Name</td>
-                <td>@faculty.Email</td>
-                <td>@faculty.Phone</td>
-                <td>@(faculty.CourseAssignments != null && faculty.CourseAssignments.Any() ? faculty.CourseAssignments.Count.ToString() : "")</td>
-                <td>
-                    <a asp-action="FacultyDetails" asp-route-id="@faculty.Id" class="btn btn-info btn-sm">Details</a>
-                    <a asp-action="EditFaculty" asp-route-id="@faculty.Id" class="btn btn-warning btn-sm">Edit</a>
-
-                    <form asp-action="DeleteFaculty" asp-route-id="@faculty.Id" method="post" style="display:inline;">
-                        @Html.AntiForgeryToken()
-                        <button type="submit" class="btn btn-danger btn-sm"
-                                onclick="return confirm('Are you sure you want to delete this faculty member?');">
-                            Delete
-                        </button>
-                    </form>
-                </td>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Courses Assigned</th>
+                <th style="width: 260px;">Actions</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var faculty in Model)
+            {
+                <tr>
+                    <td>@faculty.Name</td>
+                    <td>@faculty.Email</td>
+                    <td>@faculty.CourseAssignments.Count</td>
+                    <td>
+                        <a asp-action="FacultyDetails" asp-route-id="@faculty.Id" class="btn btn-sm btn-info">Details</a>
+                        <a asp-action="EditFaculty" asp-route-id="@faculty.Id" class="btn btn-sm btn-warning">Edit</a>
+
+                        <form asp-action="DeleteFaculty" asp-route-id="@faculty.Id" method="post" class="d-inline">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-sm btn-danger"
+                                    onclick="return confirm('Delete this faculty member?');">
+                                Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
