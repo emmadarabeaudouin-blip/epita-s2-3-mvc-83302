@@ -1,66 +1,34 @@
 ﻿@model IEnumerable<VgcCollege.Domain.Entities.Exam>
 
 @{
-    ViewData["Title"] = "My Exams";
+    ViewData["Title"] = "Exams";
     var facultyId = ViewBag.FacultyId;
 }
 
-<div class="container mt-4">
-    <h1 class="mb-4">My Exams</h1>
+<h2>Exams</h2>
 
-    @if (Model.Any())
-    {
-        <table class="table table-bordered table-striped">
-            <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>Course</th>
-                    <th>Date</th>
-                    <th>Max Score</th>
-                    <th>Results Released</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var exam in Model)
-                {
-                    <tr>
-                        <td>@exam.Title</td>
-                        <td>@exam.Course?.Name</td>
-                        <td>@exam.Date.ToShortDateString()</td>
-                        <td>@exam.MaxScore</td>
-                        <td>@(exam.ResultsReleased ? "Yes" : "No")</td>
-                        <td>
-                            <a asp-action="CreateExamResult"
-                                   asp-route-examId="@exam.Id"
-                                   asp-route-facultyId="@facultyId"
-                                   class="btn btn-primary btn-sm">
-                                Grade
-                            </a>
+<p>
+    <a asp-action="AddExam" asp-route-facultyId="@facultyId" class="btn btn-success">Add New Exam</a>
+</p>
 
-                            @if (!exam.ResultsReleased)
-                            {
-                                <form asp-action="ReleaseExamResults"
-                                      method="post"
-                                      class="d-inline">
-                                    @Html.AntiForgeryToken()
-                                    <input type="hidden" name="examId" value="@exam.Id" />
-                                    <input type="hidden" name="facultyId" value="@facultyId" />
-                                    <button type="submit" class="btn btn-success btn-sm">
-                                        Release Results
-                                    </button>
-                                </form>
-                            }
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    }
-    else
-    {
-        <p>No exams found for your courses.</p>
-    }
-
-    <a asp-action="Index" asp-route-id="@facultyId" class="btn btn-secondary">Back to Dashboard</a>
-</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Exam Date</th>
+            <th>Total Marks</th>
+            <th>Course</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var exam in Model)
+        {
+            <tr>
+                <td>@exam.Title</td>
+                <td>@exam.Date.ToShortDateString()</td>
+                <td>@exam.MaxScore</td>
+                <td>@exam.Course?.Name</td>
+            </tr>
+        }
+    </tbody>
+</table>

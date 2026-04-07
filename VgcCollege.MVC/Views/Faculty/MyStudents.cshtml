@@ -1,55 +1,26 @@
-﻿@model VgcCollege.Domain.Entities.FacultyProfile
+﻿@model IEnumerable<VgcCollege.Domain.Entities.CourseEnrolment>
 
 @{
     ViewData["Title"] = "My Students";
+    var facultyId = ViewBag.FacultyId;
 }
 
-<div class="container mt-4">
-    <h1 class="mb-4">My Students</h1>
+<h2>My Students</h2>
 
-    @if (Model.CourseAssignments != null && Model.CourseAssignments.Any())
-    {
-        @foreach (var assignment in Model.CourseAssignments)
+<table class="table">
+    <thead>
+        <tr>
+            <th>Student Name</th>
+            <th>Course</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var enrolment in Model)
         {
-            <div class="card shadow-sm mb-4">
-                <div class="card-header">
-                    <strong>Course:</strong> @assignment.Course?.Name
-                </div>
-                <div class="card-body">
-                    @if (assignment.Course?.Enrolments != null && assignment.Course.Enrolments.Any())
-                    {
-                        <table class="table table-bordered table-striped mb-0">
-                            <thead>
-                                <tr>
-                                    <th>Student Name</th>
-                                    <th>Enrol Date</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var enrolment in assignment.Course.Enrolments)
-                                {
-                                    <tr>
-                                        <td>@enrolment.StudentProfile?.Name</td>
-                                        <td>@enrolment.EnrolDate.ToShortDateString()</td>
-                                        <td>@enrolment.Status</td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    }
-                    else
-                    {
-                        <p class="mb-0">No students enrolled in this course.</p>
-                    }
-                </div>
-            </div>
+            <tr>
+                <td>@enrolment.StudentProfile.Name</td>
+                <td>@enrolment.Course.Name</td>
+            </tr>
         }
-    }
-    else
-    {
-        <p>No assigned courses found.</p>
-    }
-
-    <a asp-action="Index" asp-route-id="@Model.Id" class="btn btn-secondary">Back to Dashboard</a>
-</div>
+    </tbody>
+</table>

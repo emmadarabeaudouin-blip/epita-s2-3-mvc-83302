@@ -4,70 +4,23 @@
     ViewData["Title"] = "Faculty Dashboard";
 }
 
-<div class="container mt-4">
-    <h1 class="mb-4">Faculty Dashboard</h1>
+<h2>Faculty Dashboard</h2>
 
-    <div class="card shadow-sm mb-4">
-        <div class="card-body">
-            <h4>Welcome, @Model.Name</h4>
-            <p class="mb-1"><strong>Email:</strong> @Model.Email</p>
-            <p class="mb-0"><strong>Phone:</strong> @Model.Phone</p>
-        </div>
-    </div>
 
-    <div class="row g-3">
-        <div class="col-md-4">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5>My Profile</h5>
-                    <a asp-controller="Faculty" asp-action="MyProfile" asp-route-id="@Model.Id" class="btn btn-primary">
-                        View Profile
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5>My Courses</h5>
-                    <a asp-controller="Faculty" asp-action="MyCourses" asp-route-id="@Model.Id" class="btn btn-primary">
-                        View Courses
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5>My Students</h5>
-                    <a asp-controller="Faculty" asp-action="MyStudents" asp-route-id="@Model.Id" class="btn btn-primary">
-                        View Students
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5>My Assignments</h5>
-                    <a asp-controller="Faculty" asp-action="Assignments" asp-route-id="@Model.Id" class="btn btn-primary">
-                        View Assignments
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5>My Exams</h5>
-                    <a asp-controller="Faculty" asp-action="Exams" asp-route-id="@Model.Id" class="btn btn-primary">
-                        View Exams
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<ul>
+    <li>
+        <a asp-action="MyCourses" asp-route-id="@Model.Id">My Courses</a>
+    </li>
+    <li>
+        <a asp-action="AddAssignment" asp-route-facultyId="@Model.Id">Add Assignment</a>
+    </li>
+    <li>
+        <a asp-action="Assignments" asp-route-facultyId="@Model.Id">View Assignments</a>
+    </li>
+    <li>
+        <a asp-action="AddExam" asp-route-facultyId="@Model.Id">Add Exam</a>
+    </li>
+    <li>
+        <a asp-action="Exams" asp-route-facultyId="@Model.Id">View Exams</a>
+    </li>
+</ul>
